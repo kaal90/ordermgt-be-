@@ -1,9 +1,19 @@
 const { Sequelize } = require('sequelize');
+const { validationResult } = require("express-validator");
 const { Order, OrderProductMap, Product } = require('../models');
+
+const handleValidation = (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+};
 
 //GET
 exports.getOrders = async (req, res) => {
     try {
+        handleValidation(req, res);
+
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search;
@@ -11,6 +21,7 @@ exports.getOrders = async (req, res) => {
         const offset = (page - 1) * limit;
         const where = {};
         if (search.trim() !== "") {
+
             const orderId = parseInt(search);
             where[Sequelize.Op.or] = [];
 
@@ -33,6 +44,7 @@ exports.getOrders = async (req, res) => {
                 include: [Product]
             }
         });
+
         return res.json({
             data: rows,
             total: count,
@@ -47,6 +59,8 @@ exports.getOrders = async (req, res) => {
 //GET BY ID
 exports.getOrdersById = async (req, res) => {
     try {
+        handleValidation(req, res);
+
         const { id } = req.params;
         const order = await Order.findByPk(id);
 
@@ -65,15 +79,10 @@ exports.createOrder = async (req, res) => {
 
     const { orderDescription, productIds } = req.body;
 
-    if (!orderDescription || orderDescription.trim() === "") {
-        return res.status(400).json({ error: "Order description is required" });
-    }
-
-    if (!Array.isArray(productIds) || productIds.length === 0) {
-        return res.status(400).json({ error: "At least one product must be selected" });
-    }
-
     try {
+
+        handleValidation(req, res);
+
         const newOrder = await Order.create(
             { orderDescription },
             { transaction: t }
@@ -100,6 +109,9 @@ exports.updateOrder = async (req, res) => {
     const t = await Order.sequelize.transaction();
 
     try {
+
+        handleValidation(req, res);
+
         const { id } = req.params;
         const { orderDescription, productIds } = req.body;
 
@@ -136,6 +148,9 @@ exports.updateOrder = async (req, res) => {
 //DELETE BY ID
 exports.deleteOrder = async (req, res) => {
     try {
+
+        handleValidation(req, res);
+
         const { id } = req.params;
         const deleted = await Order.destroy({ where: { id } });
 
