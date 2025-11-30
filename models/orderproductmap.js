@@ -19,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
-      type: Sequelize.INTEGER
+      type: DataTypes.INTEGER
     },
     orderId: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'Orders',
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     },
     productId: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'Products',
@@ -44,6 +44,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'OrderProductMap',
+    tableName: 'OrderProductMap',
     timestamps: false
   });
   return OrderProductMap;

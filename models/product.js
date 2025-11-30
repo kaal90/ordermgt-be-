@@ -17,14 +17,14 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: DataTypes.INTEGER
     },
     productName: {
-      type: Sequelize.STRING(100),
+      type: DataTypes.STRING(100),
       allowNull: false
     },
     productDescription: {
-      type: Sequelize.TEXT,
+      type: DataTypes.TEXT,
       allowNull: true
     }
   }, {

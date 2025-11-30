@@ -11,7 +11,10 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-var dbtestRouter = require('./routes/test');
+const dbtestRouter = require('./routes/test');
+const orderRoutes = require('./routes/orderRoutes');
+const productRoutes = require('./routes/productRoutes');
+const cors = require("cors");
 
 app.use('/test', dbtestRouter);
 
@@ -25,8 +28,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.options("*", cors());
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ["GET","POST","PUT","DELETE"],
+}));
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/order', orderRoutes);
+app.use('/product', productRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,5 +55,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
