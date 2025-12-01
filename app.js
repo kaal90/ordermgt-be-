@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.options("*", cors());
 
 app.use(cors({
-  origin: "https://ordermgt-fe.vercel.app/",
+  origin: "https://ordermgt-fe.vercel.app",
   methods: ["GET","POST","PUT","DELETE"],
 }));
 
